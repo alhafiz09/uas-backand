@@ -1,12 +1,12 @@
 // import Model Alumni
-const Alumni = require("../model/Alumni")
+const Alumni = require("../models/Alumni")
 // buat class AlumniController
 class AlumniController {
   // buat fungsi
   async index(req, res) {
     const alumni = await Alumni.all();
   
-    if (!alumnis || alumnis.length === 0) {
+    if (!alumni || alumni.length === 0) {
       return res.status(404).json({
         message: "Data is empty",
         data: [],
@@ -20,13 +20,13 @@ class AlumniController {
   }
 
   async store(req, res) {
-    const { nama, phone, address, graduation_year, status, company_name, position } = req.body;
+    const { name, phone, address, graduation_year, status, company_name, position } = req.body;
     try {
-      if (!nama || !phone || !address || !graduation_year || !status || !company_name || !position) {
+      if (!name || !phone || !address || !graduation_year || !status || !company_name || !position) {
         throw new Error("all files must not be empty");
       } 
       const newAlumni = await Alumni.create({
-        nama,
+        name,
         phone,
         address,
         graduation_year,
@@ -87,6 +87,91 @@ class AlumniController {
       const data = { message: `Resource Not Found` };
       res.status(404).json(data);
     }
+  }
+
+  async search(req, res) {
+    const { name } = req.params;
+
+    const alumni = await Alumni.search(name);
+
+    if (!alumni) {
+      return res.status(404).json({
+        message: "Resource not found",
+        status: 404,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Get Searched Resource",
+      data: alumni,
+      status: 200,
+    });
+  }
+
+  async freshGraduate(req, res) {
+    const status = "fresh-graduate";
+
+    const alumni = await Alumni.filterByStatus(status);
+
+    if (!alumni) {n
+      return res.status(404).json({
+        message: "Resource not found",
+        status: 404,
+      });
+    }
+
+    const totalAlumni = await Alumni.getStatusCount(status);
+
+    return res.status(200).json({
+      message: "Get Fresh Graduate Resource",
+      data: alumni,
+      status: 200,
+      total: totalAlumni
+    });
+  }
+
+  async employed(req, res) {
+    const status = "employed";
+
+    const alumni = await Alumni.filterByStatus(status);
+
+    if (!alumni) {
+      return res.status(404).json({
+        message: "Resource not found",
+        status: 404,
+      });
+    }
+
+    const totalAlumni = await Alumni.getStatusCount(status);
+
+    return res.status(200).json({
+      message: "Get Employed Resource",
+      data: alumni,
+      status: 200,
+      total: totalAlumni
+    });
+  }
+
+  async unemployed(req, res) {
+    const status = "unemployed";
+
+    const alumni = await Alumni.filterByStatus(status);
+
+    if (!alumni) {
+      return res.status(404).json({
+        message: "Resource not found",
+        status: 404,
+      });
+    }
+
+    const totalAlumni = await Alumni.getStatusCount(status);
+
+    return res.status(200).json({
+      message: "Get Unemployed Resource",
+      data: alumni,
+      status: 200,
+      total: totalAlumni
+    });
   }
 }
 

@@ -20,9 +20,9 @@ router.put("/alumni/:id", AlumniController.update);
 router.delete("/alumni/:id", AlumniController.destroy);
 router.get("/alumni/:id", AlumniController.show);
 router.get("/alumni/search/:nama", AlumniController.search);
-router.get("/alumni/status/fresh-graduate", AlumniController.freshGtaduate);
+router.get("/alumni/status/fresh-graduate", AlumniController.freshGraduate);
 router.get("/alumni/status/employed", AlumniController.employed);
-router.get("/alumni/status/unemployed", AlumniController.findByStatus);
+router.get("/alumni/status/unemployed", AlumniController.unemployed);
 
 // export router
 module.exports = router;
